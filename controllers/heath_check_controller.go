@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"coupon-service/domains"
+	"coupon-service/domains/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,10 +12,10 @@ type HealthCheckController interface {
 }
 
 type HealthCheckControllerInstance struct {
-	healthCheckSv domains.HealthCheckService
+	healthCheckSv services.HealthCheckService
 }
 
-func NewHealthCheckController(healthCheckSv domains.HealthCheckService) *HealthCheckControllerInstance {
+func NewHealthCheckController(healthCheckSv services.HealthCheckService) HealthCheckController {
 	return &HealthCheckControllerInstance{
 		healthCheckSv: healthCheckSv,
 	}

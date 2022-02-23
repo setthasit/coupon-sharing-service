@@ -1,4 +1,4 @@
-package domains
+package services
 
 type HealthCheckService interface {
 	IsOk() error
@@ -6,7 +6,7 @@ type HealthCheckService interface {
 
 type HealthCheckServiceInstance struct{}
 
-func NewHealthCheckService() *HealthCheckServiceInstance {
+func NewHealthCheckService() HealthCheckService {
 	return &HealthCheckServiceInstance{}
 }
 

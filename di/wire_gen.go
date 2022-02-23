@@ -8,37 +8,30 @@ package di
 
 import (
 	"coupon-service/app/api"
+	"coupon-service/config"
 	"coupon-service/controllers"
 	"coupon-service/domains"
+	"coupon-service/domains/services"
+	"coupon-service/infrastructure/persistence"
 	"github.com/google/wire"
 )
 
 // Injectors from wire.go:
 
 func InitializeApp() *api.APIContainer {
-	healthCheckServiceInstance := domains.NewHealthCheckService()
-	healthCheckControllerInstance := controllers.NewHealthCheckController(healthCheckServiceInstance)
-	controllerContainer := controllers.NewRoute(healthCheckControllerInstance)
+	healthCheckService := services.NewHealthCheckService()
+	healthCheckController := controllers.NewHealthCheckController(healthCheckService)
+	appConfig := config.NewAppConfig()
+	dbConfig := config.NewDBConfig(appConfig)
+	db := persistence.NewDbConn(dbConfig)
+	boardUserRepository := persistence.NewBoardUserRepository(db)
+	boardUserService := services.NewBoardUserService(boardUserRepository)
+	boardUserController := controllers.NewBoardUserController(boardUserService)
+	controllerContainer := controllers.NewRoute(healthCheckController, boardUserController)
 	apiContainer := api.NewAPIContainer(controllerContainer)
 	return apiContainer
 }
 
 // wire.go:
 
-// Config
-type Config struct{}
-
-// Controllers
-type Controllers struct {
-	HealthCheckController controllers.HealthCheckController
-}
-
-// Services
-type Services struct {
-	HealthCheckService domains.HealthCheckService
-}
-
-// Repositories
-type Repositories struct{}
-
-var BindingSet = wire.NewSet(api.APIProvider, wire.Struct(new(Config), "*"), wire.Struct(new(Repositories), "*"), domains.ServiceProvider, wire.Struct(new(Services), "*"), controllers.ControllerProvider, wire.Struct(new(Controllers), "*"), wire.Bind(new(domains.HealthCheckService), new(*domains.HealthCheckServiceInstance)), wire.Bind(new(controllers.HealthCheckController), new(*controllers.HealthCheckControllerInstance)))
+var BindingSet = wire.NewSet(api.APIProvider, config.ConfigProvider, domains.ServiceProvider, controllers.ControllerProvider, persistence.PersistenceProvider)
