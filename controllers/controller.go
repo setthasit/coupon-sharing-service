@@ -22,5 +22,9 @@ func (cc *ControllerContainer) RegisterRoute(app *gin.Engine) {
 
 	apiV1.GET("/health", cc.healthController.HealthCheck)
 
-	apiV1.POST("/user/register", cc.boardUserController.CreateNewUser)
+	userAPI := apiV1.Group("/user")
+	{
+		userAPI.GET("", cc.boardUserController.GetUsers)
+		userAPI.POST("/register", cc.boardUserController.CreateNewUser)
+	}
 }

@@ -11,6 +11,7 @@ import (
 	"coupon-service/config"
 	"coupon-service/controllers"
 	"coupon-service/domains"
+	"coupon-service/domains/repositories"
 	"coupon-service/domains/services"
 	"coupon-service/infrastructure/persistence"
 	"github.com/google/wire"
@@ -24,7 +25,7 @@ func InitializeApp() *api.APIContainer {
 	appConfig := config.NewAppConfig()
 	dbConfig := config.NewDBConfig(appConfig)
 	db := persistence.NewDbConn(dbConfig)
-	boardUserRepository := persistence.NewBoardUserRepository(db)
+	boardUserRepository := repositories.NewBoardUserRepository(db)
 	boardUserService := services.NewBoardUserService(boardUserRepository)
 	boardUserController := controllers.NewBoardUserController(boardUserService)
 	controllerContainer := controllers.NewRoute(healthCheckController, boardUserController)
@@ -34,4 +35,4 @@ func InitializeApp() *api.APIContainer {
 
 // wire.go:
 
-var BindingSet = wire.NewSet(api.APIProvider, config.ConfigProvider, domains.ServiceProvider, controllers.ControllerProvider, persistence.PersistenceProvider)
+var BindingSet = wire.NewSet(api.APIProvider, config.ConfigProvider, persistence.PersistenceProvider, domains.ServiceProvider, controllers.ControllerProvider)

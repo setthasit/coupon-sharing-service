@@ -26,11 +26,11 @@ func responseItemHttp(c *gin.Context, status int, item interface{}) {
 	})
 }
 
-func responseListHttp(c *gin.Context, status int, items []interface{}, length int) {
+func responseListHttp(c *gin.Context, status int, items interface{}, length int) {
 	type baseResponse struct {
-		StatusCode int           `json:"status_code"`
-		Items      []interface{} `json:"items"`
-		ItemLength int           `json:"item_length"`
+		StatusCode int         `json:"status_code"`
+		Items      interface{} `json:"items"`
+		ItemLength int         `json:"item_length"`
 	}
 
 	c.JSON(status, &baseResponse{

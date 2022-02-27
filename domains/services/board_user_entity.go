@@ -9,6 +9,7 @@ import (
 )
 
 type BoardUserService interface {
+	Find(ctx *gin.Context) []entities.BoardUser
 	Register(ctx *gin.Context, reqUser *entities.BoardUserRegister) *entities.BoardUser
 }
 
@@ -22,6 +23,16 @@ func NewBoardUserService(
 	return &BoardUserServiceInstance{
 		boardUserRepo: boardUserRepo,
 	}
+}
+
+func (sv *BoardUserServiceInstance) Find(ctx *gin.Context) []entities.BoardUser {
+	users, err := sv.boardUserRepo.Find(ctx)
+	if err != nil {
+		ctx.Error(err)
+		return nil
+	}
+
+	return users
 }
 
 func (sv *BoardUserServiceInstance) Register(ctx *gin.Context, reqUser *entities.BoardUserRegister) *entities.BoardUser {
