@@ -24,7 +24,10 @@ func (cc *ControllerContainer) RegisterRoute(app *gin.Engine) {
 
 	userAPI := apiV1.Group("/user")
 	{
+		// To be remove: for testing only
 		userAPI.GET("", cc.boardUserController.GetUsers)
 		userAPI.POST("/register", cc.boardUserController.CreateNewUser)
+
+		userAPI.POST("/signin", cc.boardUserController.SignIn)
 	}
 }

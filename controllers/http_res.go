@@ -2,10 +2,10 @@ package controllers
 
 import "github.com/gin-gonic/gin"
 
-func responsMessageHttp(c *gin.Context, status int, message string) {
+func responsMessageHttp(c *gin.Context, status int, message interface{}) {
 	type baseResponse struct {
-		StatusCode int    `json:"status_code"`
-		Message    string `json:"message"`
+		StatusCode int         `json:"status_code"`
+		Message    interface{} `json:"message"`
 	}
 
 	c.JSON(status, &baseResponse{

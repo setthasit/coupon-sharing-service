@@ -23,6 +23,11 @@ type BoardUserRegister struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type BoardUserSignIn struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 func (user *BoardUserRegister) ToBoardUser() *BoardUser {
 	return &BoardUser{
 		Name:     user.Name,

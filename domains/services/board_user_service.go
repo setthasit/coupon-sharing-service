@@ -4,12 +4,14 @@ import (
 	"coupon-service/domains/entities"
 	"coupon-service/domains/repositories"
 	"coupon-service/infrastructure/security"
+	"errors"
 
 	"github.com/gin-gonic/gin"
 )
 
 type BoardUserService interface {
 	Find(ctx *gin.Context) []entities.BoardUser
+	SignIn(ctx *gin.Context, signInUser *entities.BoardUserSignIn) *entities.BoardUser
 	Register(ctx *gin.Context, reqUser *entities.BoardUserRegister) *entities.BoardUser
 }
 
@@ -33,6 +35,22 @@ func (sv *BoardUserServiceInstance) Find(ctx *gin.Context) []entities.BoardUser 
 	}
 
 	return users
+}
+
+func (sv *BoardUserServiceInstance) SignIn(ctx *gin.Context, signInUser *entities.BoardUserSignIn) *entities.BoardUser {
+	user, err := sv.boardUserRepo.FindByEmail(ctx, signInUser.Email)
+	if err != nil {
+		ctx.Error(errors.New("incorrect email/password"))
+		return nil
+	}
+
+	err = user.Password.Verify(signInUser.Password)
+	if err != nil {
+		ctx.Error(errors.New("incorrect email/password"))
+		return nil
+	}
+
+	return user
 }
 
 func (sv *BoardUserServiceInstance) Register(ctx *gin.Context, reqUser *entities.BoardUserRegister) *entities.BoardUser {
