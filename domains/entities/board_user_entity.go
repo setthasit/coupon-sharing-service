@@ -8,9 +8,9 @@ import (
 )
 
 type BoardUser struct {
-	ID        uint                `json:"id" gorm:"primaryKey"`
-	Name      string              `json:"name"`
-	Email     string              `json:"email" gorm:"uniqueIndex"`
+	ID        uint                `json:"id" gorm:"<-:create;primaryKey"`
+	Name      string              `json:"name" gorm:"type:varchar;size:255"`
+	Email     string              `json:"email" gorm:"uniqueIndex;type:varchar;size:100"`
 	Password  security.EncryptVal `json:"-"`
 	CreatedAt time.Time           `json:"created_at"`
 	UpdatedAt time.Time           `json:"updated_at"`
@@ -27,6 +27,6 @@ func (user *BoardUserRegister) ToBoardUser() *BoardUser {
 	return &BoardUser{
 		Name:     user.Name,
 		Email:    user.Email,
-		Password: []byte(user.Password),
+		Password: security.EncryptVal(user.Password),
 	}
 }

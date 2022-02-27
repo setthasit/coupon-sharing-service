@@ -2,12 +2,13 @@ package security
 
 import "golang.org/x/crypto/bcrypt"
 
-type EncryptVal []byte
+type EncryptVal string
 
 func Encrypt(val string) (EncryptVal, error) {
-	return bcrypt.GenerateFromPassword([]byte(val), bcrypt.DefaultCost)
+	newVal, err := bcrypt.GenerateFromPassword([]byte(val), bcrypt.DefaultCost)
+	return EncryptVal(newVal), err
 }
 
 func (ev EncryptVal) Verify(val string) error {
-	return bcrypt.CompareHashAndPassword(ev, []byte(val))
+	return bcrypt.CompareHashAndPassword([]byte(ev), []byte(val))
 }

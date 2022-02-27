@@ -1,5 +1,8 @@
 .DS_Store
 
+# Editor files
+.vscode
+
 # Build files
 build
 
