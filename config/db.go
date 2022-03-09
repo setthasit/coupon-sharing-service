@@ -6,7 +6,7 @@ type DBConfig struct {
 	Password     string `env:"DB_PASSWORD"`
 	Port         string `env:"DB_PORT"`
 	DatabaseName string `env:"DB_DATABASE_NAME"`
-	IsMigration  bool   `env:"DB_MIGRATION" default:"false"`
+	IsMigration  bool   `env:"DB_MIGRATION,default=false"`
 }
 
 func NewDBConfig(appConfig *AppConfig) *DBConfig {

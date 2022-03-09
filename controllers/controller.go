@@ -28,6 +28,7 @@ func (cc *ControllerContainer) RegisterRoute(app *gin.Engine) {
 		userAPI.GET("", cc.boardUserController.GetUsers)
 		userAPI.POST("/register", cc.boardUserController.CreateNewUser)
 
+		userAPI.POST("/signin/google", cc.boardUserController.SignInGoogle)
 		userAPI.POST("/signin", cc.boardUserController.SignIn)
 	}
 }

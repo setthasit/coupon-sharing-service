@@ -8,6 +8,7 @@ import (
 	"coupon-service/config"
 	"coupon-service/controllers"
 	"coupon-service/domains"
+	"coupon-service/infrastructure/auth"
 	"coupon-service/infrastructure/persistence"
 
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ func InitializeApp() *api.APIContainer {
 }
 
 var BindingSet = wire.NewSet(
+	auth.AuthProvider,
 	api.APIProvider,
 	config.ConfigProvider,
 	persistence.PersistenceProvider,

@@ -8,7 +8,9 @@ import (
 )
 
 type AppConfig struct {
-	DB DBConfig
+	Engine EngineConfig
+	DB     DBConfig
+	GAuth  GoogleAuthConfig
 }
 
 func NewAppConfig() *AppConfig {

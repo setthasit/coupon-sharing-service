@@ -13,6 +13,7 @@ import (
 	"coupon-service/domains"
 	"coupon-service/domains/repositories"
 	"coupon-service/domains/services"
+	"coupon-service/infrastructure/auth"
 	"coupon-service/infrastructure/persistence"
 	"github.com/google/wire"
 )
@@ -20,19 +21,22 @@ import (
 // Injectors from wire.go:
 
 func InitializeApp() *api.APIContainer {
+	appConfig := config.NewAppConfig()
+	engineConfig := config.NewEngineConfig(appConfig)
 	healthCheckService := services.NewHealthCheckService()
 	healthCheckController := controllers.NewHealthCheckController(healthCheckService)
-	appConfig := config.NewAppConfig()
 	dbConfig := config.NewDBConfig(appConfig)
 	db := persistence.NewDbConn(dbConfig)
 	boardUserRepository := repositories.NewBoardUserRepository(db)
 	boardUserService := services.NewBoardUserService(boardUserRepository)
-	boardUserController := controllers.NewBoardUserController(boardUserService)
+	googleAuthConfig := config.NewGoogleAuthConfig(appConfig)
+	googleOAuth := auth.NewGoogleOAuthClient(googleAuthConfig)
+	boardUserController := controllers.NewBoardUserController(boardUserService, googleOAuth)
 	controllerContainer := controllers.NewRoute(healthCheckController, boardUserController)
-	apiContainer := api.NewAPIContainer(controllerContainer)
+	apiContainer := api.NewAPIContainer(engineConfig, controllerContainer)
 	return apiContainer
 }
 
 // wire.go:
 
-var BindingSet = wire.NewSet(api.APIProvider, config.ConfigProvider, persistence.PersistenceProvider, domains.ServiceProvider, controllers.ControllerProvider)
+var BindingSet = wire.NewSet(auth.AuthProvider, api.APIProvider, config.ConfigProvider, persistence.PersistenceProvider, domains.ServiceProvider, controllers.ControllerProvider)

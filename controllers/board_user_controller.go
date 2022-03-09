@@ -3,6 +3,7 @@ package controllers
 import (
 	"coupon-service/domains/entities"
 	"coupon-service/domains/services"
+	"coupon-service/infrastructure/auth"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,18 +11,42 @@ import (
 
 type BoardUserController interface {
 	GetUsers(c *gin.Context)
+	SignInGoogle(c *gin.Context)
 	SignIn(c *gin.Context)
 	CreateNewUser(c *gin.Context)
 }
 
 type BoardUserControllerInstance struct {
 	BoardUserSv services.BoardUserService
+	GoogleOAuth *auth.GoogleOAuth
 }
 
-func NewBoardUserController(BoardUserSv services.BoardUserService) BoardUserController {
+func NewBoardUserController(
+	boardUserSv services.BoardUserService,
+	googleOAuth *auth.GoogleOAuth,
+) BoardUserController {
 	return &BoardUserControllerInstance{
-		BoardUserSv: BoardUserSv,
+		BoardUserSv: boardUserSv,
+		GoogleOAuth: googleOAuth,
 	}
+}
+
+func (buCtrl *BoardUserControllerInstance) SignInGoogle(c *gin.Context) {
+	tokenReq := new(entities.BoardUserSignInGoogle)
+
+	err := c.BindJSON(tokenReq)
+	if err != nil {
+		responsMessageHttp(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	info, err := buCtrl.GoogleOAuth.GetUserData(c, tokenReq.TokenID)
+	if err != nil {
+		responsMessageHttp(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	responseItemHttp(c, http.StatusOK, info)
 }
 
 func (buCtrl *BoardUserControllerInstance) GetUsers(c *gin.Context) {
