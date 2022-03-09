@@ -6,6 +6,9 @@
 # Build files
 build
 
+# Secret
+cert
+
 # Environment files
 .env*
 !.env.example
