@@ -31,6 +31,9 @@ func migrateDB(db *gorm.DB) {
 	fmt.Println("Migrating database...")
 	db.AutoMigrate(
 		&entities.BoardUser{},
+		&entities.Board{},
+		&entities.BoardMember{},
+		&entities.Coupon{},
 	)
 	fmt.Println("Migrating Success!")
 }
