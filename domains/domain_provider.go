@@ -11,7 +11,10 @@ var ServiceProvider = wire.NewSet(
 	// Sertvices
 	services.NewHealthCheckService,
 	services.NewBoardUserService,
+	services.NewBoardService,
 
 	// Repositories
 	repositories.NewBoardUserRepository,
+	repositories.NewBoardRepository,
+	repositories.NewBoardMemberRepository,
 )
