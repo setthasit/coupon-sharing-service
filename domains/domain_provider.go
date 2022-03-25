@@ -12,9 +12,11 @@ var ServiceProvider = wire.NewSet(
 	services.NewHealthCheckService,
 	services.NewBoardUserService,
 	services.NewBoardService,
+	services.NewCouponService,
 
 	// Repositories
 	repositories.NewBoardUserRepository,
 	repositories.NewBoardRepository,
 	repositories.NewBoardMemberRepository,
+	repositories.NewCouponRepository,
 )

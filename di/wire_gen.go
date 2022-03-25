@@ -37,7 +37,10 @@ func InitializeApp() *api.APIContainer {
 	boardMemberRepository := repositories.NewBoardMemberRepository(db)
 	boardService := services.NewBoardService(boardRepository, boardMemberRepository)
 	boardController := controllers.NewBoardController(boardService, boardUserService)
-	controllerContainer := controllers.NewRoute(authMiddleware, healthCheckController, boardUserController, boardController)
+	couponRepository := repositories.NewCouponRepository(db)
+	couponService := services.NewCouponService(couponRepository)
+	couponController := controllers.NewCouponController(couponService, boardUserService)
+	controllerContainer := controllers.NewRoute(authMiddleware, healthCheckController, boardUserController, boardController, couponController)
 	apiContainer := api.NewAPIContainer(engineConfig, controllerContainer)
 	return apiContainer
 }

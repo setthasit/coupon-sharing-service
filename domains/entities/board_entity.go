@@ -28,3 +28,13 @@ type BoardCreateNew struct {
 	BoardUserID uint          `json:"-"`
 	BoardMember []BoardMember `json:"member"`
 }
+
+func (bNew *BoardCreateNew) ToBoardWithAudit(boardUserID uint) *Board {
+	return &Board{
+		Name:        bNew.Name,
+		BoardMember: bNew.BoardMember,
+		BoardUserID: boardUserID,
+		CreatedBy:   boardUserID,
+		UpdatedBy:   boardUserID,
+	}
+}

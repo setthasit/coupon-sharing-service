@@ -17,17 +17,17 @@ type BoardController interface {
 }
 
 type BoardControllerInstance struct {
-	BoardSv     services.BoardService
-	BoardUserSv services.BoardUserService
+	boardSv     services.BoardService
+	boardUserSv services.BoardUserService
 }
 
 func NewBoardController(
 	boardSv services.BoardService,
-	BoardUserSv services.BoardUserService,
+	boardUserSv services.BoardUserService,
 ) BoardController {
 	return &BoardControllerInstance{
-		BoardSv:     boardSv,
-		BoardUserSv: BoardUserSv,
+		boardSv:     boardSv,
+		boardUserSv: boardUserSv,
 	}
 }
 
@@ -42,7 +42,7 @@ func (buCtrl *BoardControllerInstance) GetBoardByUser(c *gin.Context) {
 		return
 	}
 
-	boards, err := buCtrl.BoardSv.Find(c, userInfo.ID)
+	boards, err := buCtrl.boardSv.Find(c, userInfo.ID)
 	if err != nil {
 		if apiErr, ok := err.(*apiError.APIError); ok {
 			responsMessageHttp(c, apiErr.StatusCode, apiErr.Err.Error())
@@ -74,7 +74,7 @@ func (buCtrl *BoardControllerInstance) CreateNewBoard(c *gin.Context) {
 	}
 
 	newBoardReq.BoardUserID = userInfo.ID
-	board, err := buCtrl.BoardSv.CreateNewBoard(c, newBoardReq)
+	board, err := buCtrl.boardSv.CreateNewBoard(c, newBoardReq)
 	if err != nil {
 		if apiErr, ok := err.(*apiError.APIError); ok {
 			responsMessageHttp(c, apiErr.StatusCode, apiErr.Err.Error())
@@ -88,7 +88,7 @@ func (buCtrl *BoardControllerInstance) CreateNewBoard(c *gin.Context) {
 }
 
 func (buCtrl *BoardControllerInstance) getUserInfo(c *gin.Context) (*entities.BoardUser, error) {
-	user, err := buCtrl.BoardUserSv.FindByGoogleUserID(c, c.GetString(auth.AuthGUserIDContextKey))
+	user, err := buCtrl.boardUserSv.FindByGoogleUserID(c, c.GetString(auth.AuthGUserIDContextKey))
 	if err != nil {
 		return nil, err
 	}

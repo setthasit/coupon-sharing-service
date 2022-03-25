@@ -7,4 +7,5 @@ var ControllerProvider = wire.NewSet(
 	NewHealthCheckController,
 	NewBoardUserController,
 	NewBoardController,
+	NewCouponController,
 )

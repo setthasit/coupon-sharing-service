@@ -25,7 +25,7 @@ func NewBoardRepository(db *gorm.DB) BoardRepository {
 
 func (repo *BoardRepositoryInstance) Find(ctx context.Context, boardUserID uint) ([]entities.Board, error) {
 	foundBoards := make([]entities.Board, 0)
-	err := repo.db.Debug().
+	err := repo.db.
 		WithContext(ctx).
 		Preload("BoardMember", repo.db.Where(&entities.BoardMember{BoardUserID: boardUserID})).
 		Find(&foundBoards).

@@ -37,12 +37,7 @@ func (sv *BoardServiceInstance) Find(ctx *gin.Context, boardUserID uint) ([]enti
 }
 
 func (sv *BoardServiceInstance) CreateNewBoard(ctx *gin.Context, newBoard *entities.BoardCreateNew) (*entities.Board, error) {
-	board, err := sv.boardRepo.Create(ctx, &entities.Board{
-		Name:        newBoard.Name,
-		BoardUserID: newBoard.BoardUserID,
-		CreatedBy:   newBoard.BoardUserID,
-		UpdatedBy:   newBoard.BoardUserID,
-	})
+	board, err := sv.boardRepo.Create(ctx, newBoard.ToBoardWithAudit(newBoard.BoardUserID))
 	if err != nil {
 		return nil, err
 	}

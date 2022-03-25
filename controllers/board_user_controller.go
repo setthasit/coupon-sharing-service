@@ -18,14 +18,14 @@ type BoardUserController interface {
 }
 
 type BoardUserControllerInstance struct {
-	BoardUserSv services.BoardUserService
+	boardUserSv services.BoardUserService
 }
 
 func NewBoardUserController(
 	boardUserSv services.BoardUserService,
 ) BoardUserController {
 	return &BoardUserControllerInstance{
-		BoardUserSv: boardUserSv,
+		boardUserSv: boardUserSv,
 	}
 }
 
@@ -38,7 +38,7 @@ func (buCtrl *BoardUserControllerInstance) SignInGoogle(c *gin.Context) {
 		return
 	}
 
-	user, err := buCtrl.BoardUserSv.SignInGoogle(c, tokenReq)
+	user, err := buCtrl.boardUserSv.SignInGoogle(c, tokenReq)
 	if err != nil {
 		if apiErr, ok := err.(*apiError.APIError); ok {
 			responsMessageHttp(c, apiErr.StatusCode, apiErr.Err.Error())
@@ -52,7 +52,7 @@ func (buCtrl *BoardUserControllerInstance) SignInGoogle(c *gin.Context) {
 }
 
 func (buCtrl *BoardUserControllerInstance) GetUsers(c *gin.Context) {
-	users, err := buCtrl.BoardUserSv.Find(c)
+	users, err := buCtrl.boardUserSv.Find(c)
 	if err != nil {
 		if apiErr, ok := err.(*apiError.APIError); ok {
 			responsMessageHttp(c, apiErr.StatusCode, apiErr.Err.Error())
@@ -66,7 +66,7 @@ func (buCtrl *BoardUserControllerInstance) GetUsers(c *gin.Context) {
 }
 
 func (buCtrl *BoardUserControllerInstance) GetSelfInfo(c *gin.Context) {
-	user, err := buCtrl.BoardUserSv.FindByGoogleUserID(c, c.GetString(auth.AuthGUserIDContextKey))
+	user, err := buCtrl.boardUserSv.FindByGoogleUserID(c, c.GetString(auth.AuthGUserIDContextKey))
 	if err != nil {
 		if apiErr, ok := err.(*apiError.APIError); ok {
 			responsMessageHttp(c, apiErr.StatusCode, apiErr.Err.Error())

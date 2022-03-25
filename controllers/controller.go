@@ -11,6 +11,7 @@ type ControllerContainer struct {
 	healthController    HealthCheckController
 	boardUserController BoardUserController
 	boardController     BoardController
+	couponController    CouponController
 }
 
 func NewRoute(
@@ -18,12 +19,14 @@ func NewRoute(
 	healthController HealthCheckController,
 	boardUserController BoardUserController,
 	boardController BoardController,
+	couponController CouponController,
 ) *ControllerContainer {
 	return &ControllerContainer{
 		authMiddlware:       authMiddlware,
 		healthController:    healthController,
 		boardUserController: boardUserController,
 		boardController:     boardController,
+		couponController:    couponController,
 	}
 }
 
@@ -34,6 +37,7 @@ func (cc *ControllerContainer) RegisterRoute(app *gin.Engine) {
 
 	cc.registerBoardUserV1(apiV1)
 	cc.registerBoardV1(apiV1)
+	cc.registerCouponV1(apiV1)
 }
 
 func (cc *ControllerContainer) registerBoardUserV1(api *gin.RouterGroup) {
@@ -57,6 +61,18 @@ func (cc *ControllerContainer) registerBoardV1(api *gin.RouterGroup) {
 		{
 			authUserAPI.GET("", cc.boardController.GetBoardByUser)
 			authUserAPI.POST("", cc.boardController.CreateNewBoard)
+		}
+	}
+}
+
+func (cc *ControllerContainer) registerCouponV1(api *gin.RouterGroup) {
+	couponAPI := api.Group("/coupon")
+	{
+		authUserAPI := couponAPI.Use(cc.authMiddlware.Register())
+		{
+			authUserAPI.GET("", cc.couponController.GetCouponByBoard)
+			authUserAPI.POST("", cc.couponController.CreateCoupon)
+			authUserAPI.POST("/bulk", cc.couponController.CreateBulkCoupons)
 		}
 	}
 }
