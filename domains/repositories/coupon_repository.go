@@ -44,7 +44,9 @@ func (repo *CouponRepositoryInstance) GetInfo(ctx context.Context, boardID uint,
 	err := repo.db.
 		WithContext(ctx).
 		Where(&entities.Coupon{BoardID: boardID}).
-		Preload("CouponUsageHistory", repo.db.Where(&entities.CouponUsageHistory{CouponID: couponID, BoardID: boardID})).
+		Preload("CouponUsageHistory", func(db *gorm.DB) *gorm.DB {
+			return db.Order("coupon_usage_histories.id DESC")
+		}).
 		Find(&foundCoupon).
 		Error
 	if err != nil {
