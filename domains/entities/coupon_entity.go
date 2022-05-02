@@ -38,6 +38,8 @@ type Coupon struct {
 	DiscountType    DiscountType    `json:"discount_type"`
 	DiscountAmount  float64         `json:"discount_amount"`
 
+	CouponUsageHistory []CouponUsageHistory `json:"coupon_usage_history" gorm:"foreignKey:CouponID;references:ID"`
+
 	CreatedAt      time.Time      `json:"created_at"`
 	CreatedBy      uint           `json:"created_by"`
 	UpdatedAt      time.Time      `json:"updated_at"`

@@ -19,4 +19,5 @@ var ServiceProvider = wire.NewSet(
 	repositories.NewBoardRepository,
 	repositories.NewBoardMemberRepository,
 	repositories.NewCouponRepository,
+	repositories.NewCouponUsageHistoryRepository,
 )

@@ -39,3 +39,7 @@ func responseListHttp(c *gin.Context, status int, items interface{}, length int)
 		ItemLength: length,
 	})
 }
+
+func responseEmptyHttp(c *gin.Context, status int) {
+	c.JSON(status, nil)
+}

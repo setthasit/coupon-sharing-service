@@ -34,6 +34,7 @@ func migrateDB(db *gorm.DB) {
 		&entities.Board{},
 		&entities.BoardMember{},
 		&entities.Coupon{},
+		&entities.CouponUsageHistory{},
 	)
 	fmt.Println("Migrating Success!")
 }

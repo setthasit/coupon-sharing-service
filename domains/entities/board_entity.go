@@ -12,7 +12,7 @@ type Board struct {
 
 	BoardUserID uint `json:"-"`
 
-	BoardMember []BoardMember `json:"member" gorm:"foreignKey:BoardID;references:ID"`
+	BoardMember []BoardMember `json:"members" gorm:"foreignKey:BoardID;references:ID"`
 	Coupons     []Coupon      `json:"coupons" gorm:"foreignKey:BoardID;references:ID"`
 
 	CreatedAt time.Time      `json:"created_at"`

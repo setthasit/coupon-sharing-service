@@ -9,6 +9,7 @@ import (
 )
 
 type BoardMemberRepository interface {
+	ValidateUserInBoard(ctx context.Context, boardID uint, boardUserID uint) error
 	CreateBatch(ctx context.Context, newMembers []entities.BoardMember) ([]entities.BoardMember, error)
 }
 
@@ -20,6 +21,23 @@ func NewBoardMemberRepository(db *gorm.DB) BoardMemberRepository {
 	return &BoardMemberRepositoryInstance{
 		db: db,
 	}
+}
+
+func (repo *BoardMemberRepositoryInstance) ValidateUserInBoard(ctx context.Context, boardID uint, boardUserID uint) error {
+	member := new(entities.BoardMember)
+	err := repo.db.WithContext(ctx).Where(entities.BoardMember{BoardID: boardID, BoardUserID: boardUserID}).First(member).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return errors.ErrBoardMemberNotMember()
+		}
+		return err
+	}
+
+	if member.BoardID == 0 || member.BoardUserID == 0 {
+		return errors.ErrBoardMemberNotMember()
+	}
+
+	return nil
 }
 
 func (repo *BoardMemberRepositoryInstance) CreateBatch(ctx context.Context, newMembers []entities.BoardMember) ([]entities.BoardMember, error) {

@@ -7,9 +7,9 @@ import (
 )
 
 type BoardMember struct {
-	ID uint `json:"id" gorm:"<-:create;primaryKey"`
+	ID uint `json:"_" gorm:"<-:create;primaryKey"`
 
-	BoardUserID uint      `json:"-" gorm:"NOTNULL"`
+	BoardUserID uint      `json:"board_user_id" gorm:"NOTNULL"`
 	BoardUser   BoardUser `json:"-" gorm:"NOTNULL"`
 	BoardID     uint      `json:"-" gorm:"NOTNULL"`
 	Board       Board     `json:"-" gorm:"NOTNULL"`

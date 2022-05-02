@@ -43,8 +43,6 @@ func (cc *ControllerContainer) RegisterRoute(app *gin.Engine) {
 func (cc *ControllerContainer) registerBoardUserV1(api *gin.RouterGroup) {
 	userAPI := api.Group("/user")
 	{
-		// To be remove: for testing only
-		userAPI.GET("", cc.boardUserController.GetUsers)
 		userAPI.POST("/signin/google", cc.boardUserController.SignInGoogle)
 
 		authUserAPI := userAPI.Use(cc.authMiddlware.Register())
@@ -70,9 +68,14 @@ func (cc *ControllerContainer) registerCouponV1(api *gin.RouterGroup) {
 	{
 		authUserAPI := couponAPI.Use(cc.authMiddlware.Register())
 		{
-			authUserAPI.GET("", cc.couponController.GetCouponByBoard)
+			authUserAPI.GET("/:board_id", cc.couponController.GetCouponByBoard)
+			authUserAPI.GET("/:board_id/:coupon_id", cc.couponController.GetCouponInfo)
 			authUserAPI.POST("", cc.couponController.CreateCoupon)
 			authUserAPI.POST("/bulk", cc.couponController.CreateBulkCoupons)
+
+			authUserAPI.POST("/copy", cc.couponController.Copy)
+			authUserAPI.POST("/use", cc.couponController.Use)
+			authUserAPI.POST("/cancel", cc.couponController.Cancel)
 		}
 	}
 }
